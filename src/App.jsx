@@ -141,7 +141,7 @@
 // }
 
 // export default App;
-
+import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { URL } from "./constant.js";
 import Recentsearch from "./component/Recentsearch.jsx";
@@ -156,6 +156,8 @@ function App() {
   );
   const [selecthistory, setSelecthistory] = useState("");
   const [loader, setloader] = useState(false);
+  const [showGreeting, setShowGreeting] = useState(true);
+
   const ScrollAns = useRef();
 
   // Ask question to API
@@ -227,6 +229,13 @@ function App() {
     }
   }, [darkmode]);
 
+  // animate hello use , ask me anything
+  useEffect(() => {
+  const timer = setTimeout(() => setShowGreeting(false), 3000);
+  return () => clearTimeout(timer);
+}, []);
+
+
   return (
     <div className={darkmode === "dark" ? "dark" : "light"}>
       <div className="grid grid-cols-5 h-screen">
@@ -251,13 +260,19 @@ function App() {
         {/* Main Chat Area */}
         <div className="right part col-span-4 p-10 text-center">
           {/* Welcome Text (only at start) */}
-          {result.length === 0 && !loader && (
-            <h1 className="mb-3 text-4xl bg-gradient-to-r from-violet-900 via-violet-700 to-violet-900 text-transparent bg-clip-text">
-              Hello user, Ask me Anything...
-            </h1>
+          {showGreeting && (
+            <motion.h1
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1 }}
+              className="mb-3 text-4xl bg-gradient-to-r from-violet-900 via-violet-700 to-violet-900 text-transparent bg-clip-text"
+            >
+              Hello user, Ask me anything...
+            </motion.h1>
           )}
 
-          {/* ✅ Original Purple Loader */}
+          {/*  Original Purple Loader */}
           {loader && (
             <div role="status" class="mb-1">
               <svg
